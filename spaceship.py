@@ -1,4 +1,4 @@
-                           # my spaceship
+                           # MY SPACESHIP
 
 import arcade
 from bullet import Bullet

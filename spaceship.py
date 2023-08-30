@@ -13,16 +13,16 @@ class Spaceship ( arcade.Sprite ) :
         self.center_y = 40
         self.change_x = 0
         self.change_y = 0
-        self.speed = 10
+        self.speed = 5
         self.screen_range = game.width
         self.bullet_list = []
 
     def move ( self ) :
         if self.change_x == 1 :
             if self.center_x < self.screen_range :
-                self.change_x += self.speed
+                self.center_x += self.speed
         
-        elif self.center_x == -1 :
+        elif self.change_x == -1 :
             if self.center_x > 0 :
                 self.center_x -= self.speed
     

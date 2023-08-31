@@ -79,7 +79,7 @@ class Game ( arcade.Window ) :
 
 
     def on_update ( self , delta_time ) :
-#---------------------------------------------------------------------------حرکت اجسام
+
         self.me.move ()
 
         for bullet in self.me.bullet_list :
@@ -87,7 +87,7 @@ class Game ( arcade.Window ) :
         
         for enemy in self.enemy_list :
             enemy.move ()
-#-----------------------------------------------------------------------------حذف اجسام خارج شده از صفحه از لیست ها 
+
         for enemy in self.enemy_list :
             if enemy.center_y <= 0 and len ( self.life_list ) > 0 :
                 self.enemy_list.remove ( enemy )
@@ -97,16 +97,16 @@ class Game ( arcade.Window ) :
         for bullet in self.me.bullet_list :
             if bullet.center_y >= self.height :
                 self.me.bullet_list.remove ( bullet )
-#-----------------------------------------------------------------------------زمان
+
         if time.time () >= self.timer + 3 :
             new_enemy = Enemy ( self , self.enemy_speed )
             self.enemy_list.append ( new_enemy )
             self.enemy_speed += 0.1
             self.timer = time.time ()
-#------------------------------------------------------------------------------
+
         if self.life_number == 0 :
             self.mode = "Game_over"
-#------------------------------------------------------------------------------برخورد اجسام 
+
         for enemy in self.enemy_list :
             if arcade.check_for_collision ( self.me , enemy ) :
                 self.mode = "Game_over"

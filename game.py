@@ -5,28 +5,59 @@ import arcade
 from spaceship import Spaceship
 from bullet import Bullet
 from enemy import Enemy
+from life import Life
+
 
 class Game ( arcade.Window ) :
+
     def __init__ ( self ) :
         super().__init__ ( title = "INTERSTELLAR GAME" )
-        arcade.set_background_color ( arcade.color.DARK_BLUE )
-        self.background = arcade.load_texture ( ":resources:images/backgrounds/stars.png" )
+        self.game_background = arcade.load_texture ( ":resources:images/backgrounds/stars.png" )
+        self.gameover_background = arcade.load_texture ( "game over.png" )
+        self.mode = None
+        self.score = 0
         self.me = Spaceship ( self )
         self.enemy_list = []
         self.enemy_speed = 3
         self.timer = time.time ()
+        self.life_list = []
+        self.life_x = 15
+        self.life_number = 3
+        for i in range ( self.life_number ) :
+            new_life = Life ( self.life_x )
+            self.life_list.append ( new_life )
+            self.life_x += 25
+        self.fire_voice = arcade.load_sound ( ":resources:sounds/laser4.wav" )
+        self.explode = arcade.load_sound ( ????? )
+        self.gameover_voice = arcade.load_sound ( ????? )
 
 
     def on_draw ( self ) :
         arcade.start_render ()
-        arcade.draw_lrwh_rectangle_textured ( 0 , 0 , self.width , self.height , self.background )
-        self.me.draw ()
-        for bullet in self.me.bullet_list :
-            bullet.draw ()
-        
-        for enemy in self.enemy_list :
-            enemy.draw ()
 
+        if self.mode == "Game_over" :
+            arcade.set_background_color ( arcade.color.BLACK )
+            arcade.draw_lrwh_rectangle_textured ( 0 , 0 , self.width , self.height , self.gameover_background )
+            arcade.play_sound ( self.gameover_voice )
+        
+        else :
+            arcade.set_background_color ( arcade.color.DARK_BLUE)
+            arcade.draw_lrwh_rectangle_textured ( 0 , 0 , self.width , self.height , self.game_background )
+        
+            self.me.draw ()
+        
+            for bullet in self.me.bullet_list :
+                bullet.draw ()
+        
+            for enemy in self.enemy_list :
+                enemy.draw ()
+        
+            for life in self.life_list :
+                life.draw ()
+
+            score_text = f" Score : { self.score }" 
+            arcade.draw_text ( score_text , self.width - 130 , 12 , arcade.color.WHITE , 16 )
+        
         arcade.finish_render ()
 
 
@@ -39,6 +70,7 @@ class Game ( arcade.Window ) :
         
         elif symbol == arcade.key.SPACE :
             self.me.fire ()
+            arcade.play_sound ( self.fire_voice )
 
 
     def on_key_release ( self , symbol , modifiers ) :
@@ -57,8 +89,10 @@ class Game ( arcade.Window ) :
             enemy.move ()
 #-----------------------------------------------------------------------------حذف اجسام خارج شده از صفحه از لیست ها 
         for enemy in self.enemy_list :
-            if enemy.center_y <= 0 :
+            if enemy.center_y <= 0 and len ( self.life_list ) > 0 :
                 self.enemy_list.remove ( enemy )
+                self.life_list.pop ( self.life_number - 1 )
+                self.life_number -= 1
         
         for bullet in self.me.bullet_list :
             if bullet.center_y >= self.height :
@@ -70,21 +104,21 @@ class Game ( arcade.Window ) :
             self.enemy_speed += 0.1
             self.timer = time.time ()
 #------------------------------------------------------------------------------
-
+        if self.life_number == 0 :
+            self.mode = "Game_over"
 #------------------------------------------------------------------------------برخورد اجسام 
         for enemy in self.enemy_list :
             if arcade.check_for_collision ( self.me , enemy ) :
-                print (" Game Over ")
-                exit (0)
+                self.mode = "Game_over"
 
         for enemy in self.enemy_list :
             for bullet in self.me.bullet_list :
                 if arcade.check_for_collision ( enemy , bullet ) :
                     self.enemy_list.remove ( enemy )
                     self.me.bullet_list.remove ( bullet )
-
+                    arcade.play_sound ( self.explode )
+                    self.score += 1
         
-
 
 window = Game ()
 arcade.run ()

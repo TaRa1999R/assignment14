@@ -4,6 +4,7 @@ import random
 import arcade
 
 class Enemy ( arcade.Sprite ):
+    
     def __init__ ( self , game , speed ) :
         super().__init__( ":resources:images/space_shooter/playerShip1_blue.png" )
         self.width = 48

@@ -28,8 +28,7 @@ class Game ( arcade.Window ) :
             self.life_list.append ( new_life )
             self.life_x += 25
         self.fire_voice = arcade.load_sound ( ":resources:sounds/laser4.wav" )
-        self.explode = arcade.load_sound ( ????? )
-        self.gameover_voice = arcade.load_sound ( ????? )
+        self.explode = arcade.load_sound ( ":resources:sounds/gameover3.wav" )
 
 
     def on_draw ( self ) :
@@ -38,7 +37,6 @@ class Game ( arcade.Window ) :
         if self.mode == "Game_over" :
             arcade.set_background_color ( arcade.color.BLACK )
             arcade.draw_lrwh_rectangle_textured ( 0 , 0 , self.width , self.height , self.gameover_background )
-            arcade.play_sound ( self.gameover_voice )
         
         else :
             arcade.set_background_color ( arcade.color.DARK_BLUE)

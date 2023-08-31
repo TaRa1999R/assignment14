@@ -1,6 +1,6 @@
                         # MAIN PART OF GAME
 
-import random
+import time
 import arcade
 from spaceship import Spaceship
 from bullet import Bullet
@@ -13,6 +13,9 @@ class Game ( arcade.Window ) :
         self.background = arcade.load_texture ( ":resources:images/backgrounds/stars.png" )
         self.me = Spaceship ( self )
         self.enemy_list = []
+        self.enemy_speed = 3
+        self.timer = time.time ()
+
 
     def on_draw ( self ) :
         arcade.start_render ()
@@ -25,7 +28,8 @@ class Game ( arcade.Window ) :
             enemy.draw ()
 
         arcade.finish_render ()
-        
+
+
     def on_key_press ( self , symbol , modifiers ) :
         if symbol == arcade.key.LEFT or symbol == arcade.key.A :
             self.me.change_x = -1
@@ -36,11 +40,14 @@ class Game ( arcade.Window ) :
         elif symbol == arcade.key.SPACE :
             self.me.fire ()
 
+
     def on_key_release ( self , symbol , modifiers ) :
         if symbol == arcade.key.LEFT or symbol == arcade.key.RIGHT :
             self.me.change_x = 0
 
+
     def on_update ( self , delta_time ) :
+#---------------------------------------------------------------------------حرکت اجسام
         self.me.move ()
 
         for bullet in self.me.bullet_list :
@@ -48,13 +55,23 @@ class Game ( arcade.Window ) :
         
         for enemy in self.enemy_list :
             enemy.move ()
-#------------------------------------------------------------change
-        i = random.randint ( 0 , 50 )
-        if i == 10 :
-            new_enemy = Enemy ( self )
+#-----------------------------------------------------------------------------حذف اجسام خارج شده از صفحه از لیست ها 
+        for enemy in self.enemy_list :
+            if enemy.center_y <= 0 :
+                self.enemy_list.remove ( enemy )
+        
+        for bullet in self.me.bullet_list :
+            if bullet.center_y >= self.height :
+                self.me.bullet_list.remove ( bullet )
+#-----------------------------------------------------------------------------زمان
+        if time.time () >= self.timer + 3 :
+            new_enemy = Enemy ( self , self.enemy_speed )
             self.enemy_list.append ( new_enemy )
-#-----------------------------------------------------------------
+            self.enemy_speed += 0.1
+            self.timer = time.time ()
+#------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------برخورد اجسام 
         for enemy in self.enemy_list :
             if arcade.check_for_collision ( self.me , enemy ) :
                 print (" Game Over ")

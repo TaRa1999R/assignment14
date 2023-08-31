@@ -4,7 +4,7 @@ import random
 import arcade
 
 class Enemy ( arcade.Sprite ):
-    def __init__ ( self , game ) :
+    def __init__ ( self , game , speed ) :
         super().__init__( ":resources:images/space_shooter/playerShip1_blue.png" )
         self.width = 48
         self.height = 48
@@ -13,7 +13,7 @@ class Enemy ( arcade.Sprite ):
         self.center_y = game.height
         self.change_x = 0
         self.change_y = -1
-        self.speed = 3
+        self.speed = speed
 
     def move ( self ) :
         self.center_y -= self.speed

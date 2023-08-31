@@ -13,7 +13,7 @@ class Game ( arcade.Window ) :
     def __init__ ( self ) :
         super().__init__ ( title = "INTERSTELLAR GAME" )
         self.game_background = arcade.load_texture ( ":resources:images/backgrounds/stars.png" )
-        self.gameover_background = arcade.load_texture ( "game over.png" )
+        self.gameover_background = arcade.load_texture ( "image game over.png" )
         self.mode = None
         self.score = 0
         self.me = Spaceship ( self )
